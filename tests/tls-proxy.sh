@@ -227,7 +227,7 @@ function proxy_test {
     abort "GET /private, unexpected return ${RETURN//$'\n'} != 403"
   fi
 
-  log "finished proxy test"
+  log "finished proxy test!"
 }
 
 proxy_init
