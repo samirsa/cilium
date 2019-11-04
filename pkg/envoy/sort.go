@@ -87,6 +87,25 @@ type PortNetworkPolicyRuleSlice []*cilium.PortNetworkPolicyRule
 func PortNetworkPolicyRuleLess(r1, r2 *cilium.PortNetworkPolicyRule) bool {
 	// TODO: Support Kafka.
 
+	if r1 == nil {
+		log.Fatalf("PortNetworkPolicyRule r1 is nil!")
+	}
+	if r2 == nil {
+		log.Fatalf("PortNetworkPolicyRule r2 is nil!")
+	}
+	if r1.GetL7() == nil {
+		log.Fatalf("PortNetworkPolicyRule r1.L7 is nil!")
+	}
+	if r2.GetL7() == nil {
+		log.Fatalf("PortNetworkPolicyRule r2.L7 is nil!")
+	}
+	if x, ok := r1.GetL7().(*cilium.PortNetworkPolicyRule_HttpRules); ok && x == nil {
+		log.Fatalf("PortNetworkPolicyRule r1.x is nil!")
+	}
+	if x, ok := r2.GetL7().(*cilium.PortNetworkPolicyRule_HttpRules); ok && x == nil {
+		log.Fatalf("PortNetworkPolicyRule r2.x is nil!")
+	}
+
 	http1, http2 := r1.GetHttpRules(), r2.GetHttpRules()
 	switch {
 	case http1 == nil && http2 != nil:
@@ -142,6 +161,12 @@ func (s PortNetworkPolicyRuleSlice) Len() int {
 }
 
 func (s PortNetworkPolicyRuleSlice) Less(i, j int) bool {
+	if s[i] == nil {
+		log.Fatalf("PortNetworkPolicyRule %d/%d is nil!", i, len(s))
+	}
+	if s[j] == nil {
+		log.Fatalf("PortNetworkPolicyRule %d/%d is nil!", j, len(s))
+	}
 	return PortNetworkPolicyRuleLess(s[i], s[j])
 }
 
@@ -151,6 +176,11 @@ func (s PortNetworkPolicyRuleSlice) Swap(i, j int) {
 
 // SortPortNetworkPolicyRules sorts the given slice.
 func SortPortNetworkPolicyRules(rules []*cilium.PortNetworkPolicyRule) {
+	for i := range rules {
+		if rules[i] == nil {
+			log.Fatalf("PortNetworkPolicyRule %d/%d is nil!", i, len(rules))
+		}
+	}
 	sort.Sort(PortNetworkPolicyRuleSlice(rules))
 }
 
