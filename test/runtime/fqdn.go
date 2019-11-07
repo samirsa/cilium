@@ -148,6 +148,7 @@ var _ = Describe("RuntimeFQDNPolicies", func() {
 		DNSSECWorld1Target  = "world1.dnssec.test"
 		DNSSECWorld2Target  = "world2.dnssec.test"
 		DNSSECContainerName = "dnssec"
+		cloudFlare          = "1.0.0.1"
 	)
 
 	var (
@@ -247,7 +248,7 @@ var _ = Describe("RuntimeFQDNPolicies", func() {
 		By("Update resolv.conf on host to update the poller")
 
 		// This should be disabled when DNS proxy is in place.
-		vm.ExecWithSudo(`bash -c "echo -e \"nameserver 127.0.0.1\nnameserver 1.1.1.1\" > /etc/resolv.conf"`)
+		vm.ExecWithSudo(`bash -c "echo -e \"nameserver 127.0.0.1\nnameserver " + cloudFlare + "\" > /etc/resolv.conf"`)
 
 		// Need to restart cilium to use the latest resolv.conf info.
 		vm.ExecWithSudo("systemctl restart cilium")
@@ -259,7 +260,7 @@ var _ = Describe("RuntimeFQDNPolicies", func() {
 
 	AfterAll(func() {
 		// @TODO remove this one when DNS proxy is in place.
-		vm.ExecWithSudo(`bash -c 'echo -e "nameserver 8.8.8.8\nnameserver 1.1.1.1" > /etc/resolv.conf'`)
+		vm.ExecWithSudo(`bash -c 'echo -e "nameserver 8.8.8.8\nnameserver " + cloudFlare > /etc/resolv.conf'`)
 		for name := range ciliumTestImages {
 			vm.ContainerRm(name)
 		}
@@ -352,7 +353,7 @@ var _ = Describe("RuntimeFQDNPolicies", func() {
 		// www.cilium.io has a different IP than cilium.io (it is CNAMEd as well!),
 		// and so should be blocked.
 		// cilium.io.cilium.io doesn't exist.
-		// 1.1.1.1, amusingly, serves HTTP.
+		// cloudFlare, amusingly, serves HTTP.
 		for _, blockedTarget := range []string{"world2.cilium.test"} {
 			res := vm.ContainerExec(helpers.App1, helpers.CurlFail(blockedTarget))
 			res.ExpectFail("Curl succeeded against blocked DNS name %s" + blockedTarget)
@@ -742,7 +743,7 @@ var _ = Describe("RuntimeFQDNPolicies", func() {
 		expectFQDNSareApplied("cilium.io", 0)
 
 		By("Denying egress to any IPs or domains")
-		for _, blockedTarget := range []string{"1.1.1.1", "cilium.io", "google.com"} {
+		for _, blockedTarget := range []string{cloudFlare, "cilium.io", "google.com"} {
 			res := vm.ContainerExec(helpers.App1, helpers.CurlFail(blockedTarget))
 			res.ExpectFail("Curl to %s succeeded when in deny-all due to toFQDNs" + blockedTarget)
 		}
@@ -791,7 +792,7 @@ var _ = Describe("RuntimeFQDNPolicies", func() {
 			res := vm.ContainerExec(helpers.App1, helpers.CurlFail(allowedTarget))
 			res.ExpectSuccess("Curl to %s failed when in deny-all due to toFQDNs", allowedTarget)
 		}
-		for _, blockedTarget := range []string{"1.1.1.1", "cilium.io", "google.com"} {
+		for _, blockedTarget := range []string{cloudFlare, "cilium.io", "google.com"} {
 			res := vm.ContainerExec(helpers.App1, helpers.CurlFail(blockedTarget))
 			res.ExpectFail("Curl to %s succeeded when in allow-all DNS but limited toFQDNs", blockedTarget)
 		}

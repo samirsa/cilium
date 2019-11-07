@@ -56,6 +56,7 @@ var _ = Describe("K8sPolicyTest", func() {
 		backgroundCancel     context.CancelFunc = func() { return }
 		backgroundError      error
 		apps                 = []string{helpers.App1, helpers.App2, helpers.App3}
+		cloudFlare           = "1.0.0.1"
 	)
 
 	BeforeAll(func() {
@@ -129,13 +130,13 @@ var _ = Describe("K8sPolicyTest", func() {
 
 		validateConnectivity := func(expectWorldSuccess, expectClusterSuccess bool) {
 			for _, pod := range []string{appPods[helpers.App2], appPods[helpers.App3]} {
-				By("HTTP connectivity to 1.1.1.1")
+				By("HTTP connectivity to " + cloudFlare)
 				res := kubectl.ExecPodCmd(
 					namespaceForTest, pod,
-					helpers.CurlFail("http://1.1.1.1/"))
+					helpers.CurlFail("http://" + cloudFlare + "/"))
 
 				ExpectWithOffset(1, res).To(getMatcher(expectWorldSuccess),
-					"HTTP egress connectivity to 1.1.1.1 from pod %q", pod)
+					"HTTP egress connectivity to " + cloudFlare + " from pod %q", pod)
 
 				By("ICMP connectivity to 8.8.8.8")
 				res = kubectl.ExecPodCmd(
@@ -405,7 +406,7 @@ var _ = Describe("K8sPolicyTest", func() {
 			for _, pod := range []string{appPods[helpers.App2], appPods[helpers.App3]} {
 				res := kubectl.ExecPodCmd(
 					namespaceForTest, pod,
-					helpers.CurlFail("http://1.1.1.1/"))
+					helpers.CurlFail("http://" + cloudFlare + "/"))
 				res.ExpectFail("Egress connectivity should be denied for pod %q", pod)
 
 				res = kubectl.ExecPodCmd(
@@ -432,7 +433,7 @@ var _ = Describe("K8sPolicyTest", func() {
 			for _, pod := range []string{appPods[helpers.App2], appPods[helpers.App3]} {
 				res := kubectl.ExecPodCmd(
 					namespaceForTest, pod,
-					helpers.CurlFail("http://1.1.1.1/"))
+					helpers.CurlFail("http://" + cloudFlare + "/"))
 				res.ExpectFail("Egress connectivity should be denied for pod %q", pod)
 
 				res = kubectl.ExecPodCmd(
@@ -492,7 +493,7 @@ var _ = Describe("K8sPolicyTest", func() {
 			for _, pod := range apps {
 				res := kubectl.ExecPodCmd(
 					namespaceForTest, pod,
-					helpers.CurlFail("http://1.1.1.1/"))
+					helpers.CurlFail("http://" + cloudFlare + "/"))
 				res.ExpectFail("Egress connectivity should be denied for pod %q", pod)
 
 				res = kubectl.ExecPodCmd(
@@ -538,7 +539,7 @@ var _ = Describe("K8sPolicyTest", func() {
 			for _, pod := range []string{appPods[helpers.App2], appPods[helpers.App3]} {
 				res := kubectl.ExecPodCmd(
 					namespaceForTest, pod,
-					helpers.CurlFail("http://1.1.1.1/"))
+					helpers.CurlFail("http://" + cloudFlare + "/"))
 				res.ExpectSuccess("Egress connectivity should be allowed for pod %q", pod)
 
 				res = kubectl.ExecPodCmd(

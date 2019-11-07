@@ -54,6 +54,7 @@ const (
 	policiesL4Json                  = "Policies-l4-policy.json"
 	policiesL3DependentL7EgressJSON = "Policies-l3-dependent-l7-egress.json"
 	policiesReservedInitJSON        = "Policies-reserved-init.json"
+	cloudFlare                      = "1.0.0.1"
 )
 
 var _ = Describe("RuntimePolicies", func() {
@@ -1057,7 +1058,7 @@ var _ = Describe("RuntimePolicies", func() {
 	})
 
 	It("Tests EntityNone as a deny-all", func() {
-		worldIP := "1.1.1.1"
+		worldIP := cloudFlare
 
 		httpd1Label := "id.httpd1"
 		http1IP, err := vm.ContainerInspectNet(helpers.Httpd1)
@@ -1127,13 +1128,13 @@ var _ = Describe("RuntimePolicies", func() {
 		curlWithRetry(helpers.App1, "http://%s/public", http1IP[helpers.IPv4]).ExpectSuccess("%q cannot make http request to pod", helpers.App1)
 		vm.ContainerExec(helpers.App1, helpers.CurlFail("-4 http://%s", worldIP)).ExpectFail("%q can make http request to %s", helpers.App1, worldIP)
 
-		By("testing basic egress to 1.1.1.1/32")
+		By("testing basic egress to " + cloudFlare + "/32")
 		policy = fmt.Sprintf(`
 		[{
 			"endpointSelector": {"matchLabels":{"%s":""}},
 			"egress": [{
 				"toCIDR": [
-					"1.1.1.1/32"
+					cloudFlare + "/32"
 				]
 			}]
 		}]`, app1Label)
@@ -1321,7 +1322,6 @@ var _ = Describe("RuntimePolicies", func() {
 		})
 
 		It("Tests egress with CIDR+L4 policy to external https service", func() {
-			cloudFlare := "1.1.1.1"
 			proto := "https"
 			retries := 5
 
