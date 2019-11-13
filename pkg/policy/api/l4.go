@@ -58,7 +58,10 @@ func (p PortProtocol) Covers(other PortProtocol) bool {
 // K8sSecret is a reference to a k8s secret.
 type K8sSecret struct {
 	// Namespace is the k8s namespace in which the secret exists.
-	Namespace string `json:"namespace"`
+	// Context of use determines the default value if left out (e.g., "default")
+	//
+	// +optional
+	Namespace string `json:"namespace,omitempty"`
 
 	// Name is the name of the k8s secret.
 	Name string `json:"name"`
