@@ -85,6 +85,9 @@ type PerEpData struct {
 
 	// Pre-computed HTTP rules with resolved k8s secrets
 	EnvoyHTTPRules *cilium.PortNetworkPolicyRule_HttpRules `json:"-"`
+	// CanShortCircuit is true if all 'EnvoyHTTPRules' may be
+	// short-circuited by other matches.
+	CanShortCircuit bool
 
 	api.L7Rules
 }
@@ -478,7 +481,7 @@ func (l4 *L4Filter) attach(policyCtx PolicyContext, l4Policy *L4Policy) {
 	// Compute Envoy policies when a policy is ready to be used
 	if policyCtx != nil {
 		for _, perEpData := range l4.L7RulesPerEp {
-			perEpData.EnvoyHTTPRules = policyCtx.GetEnvoyHTTPRules(&perEpData.L7Rules)
+			perEpData.EnvoyHTTPRules, perEpData.CanShortCircuit = policyCtx.GetEnvoyHTTPRules(&perEpData.L7Rules)
 		}
 	}
 
