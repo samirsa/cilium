@@ -84,10 +84,10 @@ type PerEpData struct {
 	OriginatingTLS *TLSContext `json:"originatingTLS,omitempty"`
 
 	// Pre-computed HTTP rules with resolved k8s secrets
-	EnvoyHTTPRules *cilium.PortNetworkPolicyRule_HttpRules `json:"-"`
+	EnvoyHTTPRules *cilium.HttpNetworkPolicyRules `json:"-"`
 	// CanShortCircuit is true if all 'EnvoyHTTPRules' may be
 	// short-circuited by other matches.
-	CanShortCircuit bool
+	CanShortCircuit bool `json:"-"`
 
 	api.L7Rules
 }
@@ -482,6 +482,7 @@ func (l4 *L4Filter) attach(policyCtx PolicyContext, l4Policy *L4Policy) {
 	if policyCtx != nil {
 		for _, perEpData := range l4.L7RulesPerEp {
 			perEpData.EnvoyHTTPRules, perEpData.CanShortCircuit = policyCtx.GetEnvoyHTTPRules(&perEpData.L7Rules)
+			log.Debugf("EnvoyHTTPRules: can short circuit: %s: %v", perEpData.EnvoyHTTPRules.String(), perEpData.CanShortCircuit)
 		}
 	}
 

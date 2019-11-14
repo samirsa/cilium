@@ -716,7 +716,7 @@ func getCiliumTLSContext(tls *policy.TLSContext) *cilium.TLSContext {
 	}
 }
 
-func GetEnvoyHTTPRules(certManager policy.CertificateManager, l7Rules *api.L7Rules) (*cilium.PortNetworkPolicyRule_HttpRules, bool) {
+func GetEnvoyHTTPRules(certManager policy.CertificateManager, l7Rules *api.L7Rules) (*cilium.HttpNetworkPolicyRules, bool) {
 	if len(l7Rules.HTTP) > 0 { // Just cautious. This should never be false.
 		canShortCircuit := true
 		httpRules := make([]*cilium.HttpNetworkPolicyRule, 0, len(l7Rules.HTTP))
@@ -729,10 +729,8 @@ func GetEnvoyHTTPRules(certManager policy.CertificateManager, l7Rules *api.L7Rul
 			}
 		}
 		SortHTTPNetworkPolicyRules(httpRules)
-		return &cilium.PortNetworkPolicyRule_HttpRules{
-			HttpRules: &cilium.HttpNetworkPolicyRules{
-				HttpRules: httpRules,
-			},
+		return &cilium.HttpNetworkPolicyRules{
+			HttpRules: httpRules,
 		}, canShortCircuit
 	}
 	return nil, true
@@ -775,11 +773,15 @@ func getPortNetworkPolicyRule(sel policy.CachedSelector, l7Parser policy.L7Parse
 		// so check if we have any rules
 		if len(l7Rules.HTTP) > 0 {
 			// Use L7 rules computed earlier?
+			var httpRules *cilium.HttpNetworkPolicyRules
 			if l7Rules.EnvoyHTTPRules != nil {
-				r.L7 = l7Rules.EnvoyHTTPRules
+				httpRules = l7Rules.EnvoyHTTPRules
 				canShortCircuit = l7Rules.CanShortCircuit
 			} else {
-				r.L7, canShortCircuit = GetEnvoyHTTPRules(nil, &l7Rules.L7Rules)
+				httpRules, canShortCircuit = GetEnvoyHTTPRules(nil, &l7Rules.L7Rules)
+			}
+			r.L7 = &cilium.PortNetworkPolicyRule_HttpRules{
+				HttpRules: httpRules,
 			}
 		}
 
@@ -840,6 +842,7 @@ func getDirectionNetworkPolicy(l4Policy policy.L4PolicyMap, policyEnforced bool)
 		canShortCircuit := true
 		for sel, l7 := range l4.L7RulesPerEp {
 			rule, cs := getPortNetworkPolicyRule(sel, l4.L7Parser, l7)
+			log.Debugf("Policy %s: %s can short circuit: %v (canShortCircuit %v)", sel.String(), rule.String(), cs, canShortCircuit)
 			if !cs {
 				canShortCircuit = false
 			}
@@ -857,6 +860,7 @@ func getDirectionNetworkPolicy(l4Policy policy.L4PolicyMap, policyEnforced bool)
 
 		// Short-circuit rules if a rule allows all and all other rules can be short-circuited
 		if allowAll && canShortCircuit {
+			log.Info("Short circuiting HTTP rules due to rule allowing all and no other rules needing attention")
 			pnp.Rules = nil
 		}
 
