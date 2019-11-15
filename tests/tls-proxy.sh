@@ -189,6 +189,23 @@ EOF
                 }]
 	    }
 	}]
+    },{
+	"toPorts": [{
+	    "ports": [{"port": "443", "protocol": "tcp"}],
+	    "terminatingTLS": {
+	        "directory": "tests/server",
+		"privateKey": "private.key"
+	    },
+	    "originatingTLS": {
+	        "directory": "tests/client"
+	    },
+	    "rules": {
+                "HTTP": [{
+		    "method": "GET",
+		    "path": "/public"
+		}]
+	    }
+	}]
     }]
 }]
 EOF
