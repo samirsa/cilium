@@ -43,7 +43,7 @@ GO_VERSION := 1.13.4
 # Since there's a bug with NFS or the kernel, the flock syscall hangs the documentation
 # build in the developer VM. For this reason the documentation build is skipped if NFS
 # is running in the developer VM.
-SKIP_DOCS ?= $(shell if mount | grep -q "/home/vagrant/go/src/github.com/cilium/cilium type nfs"; then echo "true"; else echo "false"; fi)
+SKIP_DOCS ?= $(shell if mount | grep -q "/home/vagrant/go/src/github.com/cilium/cilium type nfs"; then echo "true"; else echo "true"; fi)
 
 TEST_LDFLAGS=-ldflags "-X github.com/cilium/cilium/pkg/kvstore.consulDummyAddress=https://consul:8443 \
 	-X github.com/cilium/cilium/pkg/kvstore.etcdDummyAddress=http://etcd:4002 \

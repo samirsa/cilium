@@ -114,7 +114,7 @@ func (epSync *EndpointSynchronizer) RunK8sCiliumEndpointSync(e *endpoint.Endpoin
 				// from before, only updating on changes.
 				mdl := e.GetCiliumEndpointStatus()
 				if reflect.DeepEqual(mdl, lastMdl) {
-					scopedLog.Debug("Skipping CiliumEndpoint update because it has not changed")
+					//scopedLog.Debug("Skipping CiliumEndpoint update because it has not changed")
 					return nil
 				}
 

@@ -352,8 +352,8 @@ spec:
               key: custom-cni-conf
               name: cilium-config
               optional: true
-        image: "docker.io/cilium/cilium:latest"
-        imagePullPolicy: Always
+        image: "samircilium/cilium:samir"
+        imagePullPolicy: IfNotPresent
         lifecycle:
           postStart:
             exec:
@@ -440,8 +440,8 @@ spec:
               key: wait-bpf-mount
               name: cilium-config
               optional: true
-        image: "docker.io/cilium/cilium:latest"
-        imagePullPolicy: Always
+        image: "samircilium/cilium:samir"
+        imagePullPolicy: IfNotPresent
         name: clean-cilium-state
         securityContext:
           capabilities:
@@ -616,8 +616,8 @@ spec:
               key: identity-allocation-mode
               name: cilium-config
               optional: true
-        image: "docker.io/cilium/operator:latest"
-        imagePullPolicy: Always
+        image: "samircilium/operator:samir"
+        imagePullPolicy: IfNotPresent
         name: cilium-operator
         livenessProbe:
           httpGet:
