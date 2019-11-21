@@ -353,7 +353,7 @@ spec:
               name: cilium-config
               optional: true
         image: "samircilium/cilium:samir"
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         lifecycle:
           postStart:
             exec:
@@ -441,7 +441,7 @@ spec:
               name: cilium-config
               optional: true
         image: "samircilium/cilium:samir"
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         name: clean-cilium-state
         securityContext:
           capabilities:
@@ -617,7 +617,7 @@ spec:
               name: cilium-config
               optional: true
         image: "samircilium/operator:samir"
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         name: cilium-operator
         livenessProbe:
           httpGet:

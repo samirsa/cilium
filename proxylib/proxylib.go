@@ -24,6 +24,7 @@ import (
 	_ "github.com/cilium/cilium/proxylib/cassandra"
 	_ "github.com/cilium/cilium/proxylib/memcached"
 	"github.com/cilium/cilium/proxylib/npds"
+	_ "github.com/cilium/cilium/proxylib/pdp"
 	. "github.com/cilium/cilium/proxylib/proxylib"
 	_ "github.com/cilium/cilium/proxylib/r2d2"
 	_ "github.com/cilium/cilium/proxylib/testparsers"
@@ -139,6 +140,7 @@ func OpenModule(params [][2]string, debug bool) uint64 {
 		}
 	}
 
+	debug = true
 	if debug {
 		mutex.Lock()
 		log.SetLevel(log.DebugLevel)
