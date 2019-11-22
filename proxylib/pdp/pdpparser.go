@@ -23,32 +23,10 @@ import (
 
 	. "github.com/cilium/cilium/proxylib/proxylib"
 
+	"github.com/cilium/cilium/pkg/client"
 	"github.com/cilium/proxy/go/cilium/api"
 	log "github.com/sirupsen/logrus"
 )
-
-//
-// PDP v3/v4 Parser
-//
-// Spec: https://github.com/apache/pdp/blob/trunk/doc/native_protocol_v4.spec
-//
-
-// Current PDP parser supports filtering on messages where the opcode is 'query-like'
-// (i.e., opcode 'query', 'prepare', 'batch'.  In those scenarios, we match on query_action and query_table.
-// Examples:
-// query_action = 'select', query_table = 'system.*'
-// query_action = 'insert', query_table = 'attendance.daily_records'
-// query_action = 'select', query_table = 'deathstar.scrum_notes'
-// query_action = 'insert', query_table = 'covalent.foo'
-//
-// Batch requests are logged as invidual queries, but an entire batch request will be allowed
-// only if all requests are allowed.
-
-// Non-query client requests, including 'Options', 'Auth_Response', 'Startup', and 'Register'
-// are automatically allowed to simplify the policy language.
-
-// There are known changes in protocol v2 that are not compatible with this parser, see the
-// the "Changes from v2" in https://github.com/apache/pdp/blob/trunk/doc/native_protocol_v3.spec
 
 type PDPRule struct {
 	queryActionExact   string
@@ -177,7 +155,25 @@ func (pf *PDPParserFactory) Create(connection *Connection) Parser {
 	return &p
 }
 
+func getSrcEndpointInfo(connection *Connection) {
+	c, err := client.NewDefaultClient()
+	if err != nil {
+		log.WithError(err).Fatal("Cannot create client")
+		return
+	}
+
+	identity, err := c.IdentityGet(fmt.Sprint(connection.SrcId))
+	if err != nil {
+		log.WithError(err).Fatal("Cannot find Identity")
+		return
+	}
+	log.Debugf("Found Identity Labels: %v", identity.Labels)
+}
+
 func (p *PDPParser) OnData(reply, endStream bool, dataArray [][]byte) (OpType, int) {
+
+	log.Debugf("OnDataInvoked for Connection: %v", p.connection.SrcId)
+	getSrcEndpointInfo(p.connection)
 
 	// inefficient, but simple for now
 	data := bytes.Join(dataArray, []byte{})
