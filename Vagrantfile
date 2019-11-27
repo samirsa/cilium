@@ -185,6 +185,7 @@ Vagrant.configure(2) do |config|
     config.vm.define master_vm_name, primary: true do |cm|
         node_ip = "#{$master_ip}"
 		cm.vm.network "forwarded_port", guest: 6443, host: 7443
+		cm.vm.network "forwarded_port", guest: 32000, host: 32000
         cm.vm.network "private_network", ip: "#{$master_ip}",
             virtualbox__intnet: "cilium-test-#{$build_id}",
             :libvirt__guest_ipv6 => "yes",
