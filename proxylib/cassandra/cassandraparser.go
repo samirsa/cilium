@@ -60,6 +60,10 @@ const cassMaxLen = 268435456 // 256 MB, per spec
 
 const unknownPreparedQueryPath = "/unknown-prepared-query"
 
+func (rule *CassandraRule) PDPMatches(data interface{}) bool {
+	return true
+}
+
 func (rule *CassandraRule) Matches(data interface{}) bool {
 	// Cast 'data' to the type we give to 'Matches()'
 

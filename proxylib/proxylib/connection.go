@@ -15,8 +15,12 @@
 package proxylib
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net"
+	"net/http"
 	"strconv"
 	"time"
 
@@ -170,6 +174,49 @@ func (connection *Connection) OnData(reply, endStream bool, data *[][]byte, filt
 		}
 	}
 	return OK
+}
+
+type PDPInput struct {
+	Attributes []Attribute `json:"attributes"`
+}
+type Value struct {
+	StrValue string `json:"str_value"`
+}
+type Attribute struct {
+	Key   string `json:"key"`
+	Value Value  `json:"value"`
+}
+
+func (connection *Connection) PDPMatches(data interface{}) bool {
+	pdpInput := PDPInput{
+		Attributes: []Attribute{
+			{Key: "sip", Value: Value{StrValue: "192.168.40.101"}},
+			{Key: "sport", Value: Value{StrValue: "22"}},
+			{Key: "dip", Value: Value{StrValue: "10.10.1.1"}},
+			{Key: "dport", Value: Value{StrValue: "443"}},
+		},
+	}
+
+	log.Debugf("PDPMatches invoked on connection %v", connection)
+	requestBody, err := json.Marshal(pdpInput)
+	if err != nil {
+		log.Debugf("PDPMatches - Error in Json Marshalling")
+		return false
+	}
+	resp, err := http.Post("http://pdp-svc:10000/v1/pdp/query", "text/plain", bytes.NewBuffer(requestBody))
+	if err != nil {
+		log.Debugf("PDPMatches - Error in Post %s", err.Error())
+		return false
+	}
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Debugf("PDPMatches - Error in parsing Response")
+		return false
+	}
+	log.Debugf("PDPMatches PDP Output %s", string(body))
+	return true
 }
 
 func (connection *Connection) Matches(l7 interface{}) bool {

@@ -40,6 +40,10 @@ type HeaderRule struct {
 	hasSuffix []byte
 }
 
+func (rule *HeaderRule) PDPMatches(data interface{}) bool {
+	return true
+}
+
 // Matches returns true if the HeaderRule matches
 func (rule *HeaderRule) Matches(data interface{}) bool {
 	log.Debugf("headerparser checking rule %v", *rule)

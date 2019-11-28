@@ -1,0 +1,26 @@
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+description: "Allow only permitted requests to empire Cassandra server"
+metadata:
+  name: "secure-starwars-ui"
+specs:
+  - endpointSelector:
+      matchLabels:
+        app: cass-server
+    ingress:
+    - fromEndpoints:
+      - matchLabels:
+          app: starwars
+      toPorts:
+      - ports:
+        - port: "9042"
+          protocol: TCP
+        rules:
+          l7proto: pdp
+          l7: 
+          - query_action: "select"
+            query_table: "system\\..*" 
+          - query_action: "select"
+            query_table: "system_schema\\..*" 
+          - query_action: "insert"
+            query_table: "attendance.daily_records"

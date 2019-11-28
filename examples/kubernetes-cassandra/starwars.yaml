@@ -1,9 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: starwars
+spec:
+  selector:
+    matchLabels:
+      app: starwars
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: starwars
+    spec:
+      containers:
+      - name: starwars
+        image: docker.io/samircilium/starwars:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8000
+---
 apiVersion: v1
 kind: Service
 metadata:
-  name: starwars
+  name: starwars-svc
   labels:
-    run: starwars
+    app: starwars
 spec:
   type: NodePort
   ports:
@@ -13,25 +34,4 @@ spec:
     protocol: TCP
     name: http
   selector:
-    run: starwars
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: starwars
-spec:
-  selector:
-    matchLabels:
-      run: starwars
-  replicas: 1
-  template:
-    metadata:
-      labels:
-        run: starwars
-    spec:
-      containers:
-      - name: starwars
-        image: docker.io/samircilium/starwars:latest
-        imagePullPolicy: Always
-        ports:
-        - containerPort: 8000
+    app: starwars

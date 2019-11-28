@@ -43,6 +43,10 @@ type Rule struct {
 	empty bool
 }
 
+func (rule *Rule) PDPMatches(data interface{}) bool {
+	return true
+}
+
 // Matches returns true if the Rule matches
 func (rule *Rule) Matches(data interface{}) bool {
 	log.Debugf("memcache checking rule %v", *rule)

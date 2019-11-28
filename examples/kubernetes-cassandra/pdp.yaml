@@ -1,9 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pdp
+spec:
+  selector:
+    matchLabels:
+      app: pdp
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: pdp
+    spec:
+      containers:
+      - name: pdp
+        image: docker.io/samircilium/pdp:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 10000
+        - containerPort: 20000
+---
 apiVersion: v1
 kind: Service
 metadata:
-  name: pdp
+  name: pdp-svc
   labels:
-    run: pdp
+    app: pdp
 spec:
   ports:
   - port: 10000
@@ -15,26 +37,4 @@ spec:
     protocol: TCP
     name: pdp-author-api
   selector:
-    run: pdp
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: pdp
-spec:
-  selector:
-    matchLabels:
-      run: pdp
-  replicas: 1
-  template:
-    metadata:
-      labels:
-        run: pdp
-    spec:
-      containers:
-      - name: pdp
-        image: docker.io/samircilium/pdp:latest
-        imagePullPolicy: Always
-        ports:
-        - containerPort: 10000
-        - containerPort: 20000
+    app: pdp

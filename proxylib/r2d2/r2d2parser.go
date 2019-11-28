@@ -58,6 +58,10 @@ type r2d2RequestData struct {
 	file string
 }
 
+func (rule *r2d2Rule) PDPMatches(data interface{}) bool {
+	return true
+}
+
 func (rule *r2d2Rule) Matches(data interface{}) bool {
 	// Cast 'data' to the type we give to 'Matches()'
 

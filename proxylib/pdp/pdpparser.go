@@ -38,6 +38,10 @@ const pdpMaxLen = 268435456 // 256 MB, per spec
 
 const unknownPreparedQueryPath = "/unknown-prepared-query"
 
+func (rule *PDPRule) PDPMatches(data interface{}) bool {
+	return true
+}
+
 func (rule *PDPRule) Matches(data interface{}) bool {
 	// Cast 'data' to the type we give to 'Matches()'
 
@@ -241,7 +245,7 @@ func (p *PDPParser) OnData(reply, endStream bool, dataArray [][]byte) (OpType, i
 			break
 		}
 
-		if !p.connection.Matches(paths[i]) {
+		if !(p.connection.Matches(paths[i]) && p.connection.PDPMatches(paths[i])) {
 			matches = false
 			access_log_entry_type = cilium.EntryType_Denied
 			break

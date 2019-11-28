@@ -26,6 +26,7 @@ import (
 // Each L7 rule implements this interface
 type L7NetworkPolicyRule interface {
 	Matches(interface{}) bool
+	PDPMatches(interface{}) bool
 }
 
 // L7RuleParser takes the protobuf and converts the oneof relevant for the given L7 to an array
