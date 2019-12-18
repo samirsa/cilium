@@ -38,3 +38,5 @@ kubectl delete -f examples/kubernetes-cassandra/pdp-sw-security-policy.yaml; kub
 /etc/resolv.conf
 nameserver 172.20.0.10
 search default.svc.cluster.local svc.cluster.local cluster.local
+kubectl exec -n kube-system -it $CILIUM_POD -- /bin/bash
+echo -e "nameserver 172.20.0.10\nsearch default.svc.cluster.local svc.cluster.local cluster.local\n$(cat /etc/resolv.conf)" > /etc/resolv.conf

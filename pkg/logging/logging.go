@@ -45,7 +45,7 @@ var (
 	// DefaultLogLevelStr is the string representation of DefaultLogLevel. It
 	// is used to allow for injection of the logging level via go's ldflags in
 	// unit tests, as only injection with strings via ldflags is allowed.
-	DefaultLogLevelStr = "info"
+	DefaultLogLevelStr = "debug"
 
 	// syslogOpts is the set of supported options for syslog configuration.
 	syslogOpts = map[string]bool{

@@ -1,0 +1,62 @@
+{
+    "polMeta": {
+        "policyId": "policy-41245sa-fwe2-f34s-cse2-3ce21ca3fwe21",
+        "name": "Policy1068",
+        "tenant": "Tenant1",
+        "namespace": "ns1",
+        "attributes": [{
+            "key": "data_resolver_url",
+            "value": {
+                "str_value": "http://json-server/data/4"
+            }
+        }]
+    },
+    "policyDoc": {
+        "policyType": 0,
+        "policyDocContent": {
+            "attributeBasedPolicyDoc": {
+                "rules": [{
+                    "conditions": [{
+                        "fragment": {
+                            "attribute": {
+                                "key": "dip",
+                                "value": {
+                                    "str_value": "192.59.100.240"
+                                }
+                            },
+                            "fop": 1
+                        }
+                    }, {
+                        "fragment": {
+                            "attribute": {
+                                "key": "dport",
+                                "value": {
+                                    "str_value": "109"
+                                }
+                            },
+                            "fop": 0
+                        }
+                    }, {
+                        "fragment": {
+                            "attribute": {
+                                "key": "protocol",
+                                "value": {
+                                    "str_value": "TCP, UDP"
+                                }
+                            },
+                            "fop": 1
+                        }
+                    }],
+                    "consequent": {
+                        "attributes": [{
+                            "key": "ACTION - XYZ",
+                            "value": {
+                                "str_value": "ALLOW"
+                            }
+                        }]
+                    }
+                }]
+            }
+        }
+    }
+}

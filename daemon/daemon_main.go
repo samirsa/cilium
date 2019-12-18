@@ -336,7 +336,7 @@ func init() {
 	flags.Bool(option.EnableL7Proxy, defaults.EnableL7Proxy, "Enable L7 proxy for L7 policy enforcement")
 	option.BindEnv(option.EnableL7Proxy)
 
-	flags.Bool(option.EnableTracing, false, "Enable tracing while determining policy (debugging)")
+	flags.Bool(option.EnableTracing, true, "Enable tracing while determining policy (debugging)")
 	option.BindEnv(option.EnableTracing)
 
 	flags.String(option.EnvoyLog, "", "Path to a separate Envoy log file, if any")

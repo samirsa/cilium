@@ -1,0 +1,23 @@
+{
+    "attributes": [{
+        "key": "sip",
+        "value": {
+            "str_value": "192.168.40.101"
+        }
+    }, {
+        "key": "sport",
+        "value": {
+            "str_value": "22"
+        }
+    }, {
+        "key": "dip",
+        "value": {
+            "str_value": "10.10.1.1"
+        }
+    }, {
+        "key": "dport",
+        "value": {
+            "str_value": "443"
+        }
+    }]
+}

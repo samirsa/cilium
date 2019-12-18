@@ -37,7 +37,8 @@ const (
 
 // TraceEnabled returns true if the SearchContext requests tracing.
 func (s *SearchContext) TraceEnabled() bool {
-	return s.Trace != TRACE_DISABLED
+	//return s.Trace != TRACE_DISABLED
+	return true
 }
 
 // PolicyTrace logs the given message into the SearchContext logger only if

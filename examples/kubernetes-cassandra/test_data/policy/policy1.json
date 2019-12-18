@@ -1,0 +1,84 @@
+{
+    "polMeta": {
+        "policyId": "policy-efecde2e-c56b-4dd4-be2b-3ce21ca3fa96",
+        "name": "Policy224",
+        "tenant": "Tenant1",
+        "namespace": "ns1",
+        "attributes": [{
+            "key": "data_resolver_url",
+            "value": {
+                "str_value": "http://json-server/data/1"
+            }
+        }]
+    },
+    "policyDoc": {
+        "policyType": 0,
+        "policyDocContent": {
+            "attributeBasedPolicyDoc": {
+                "rules": [{
+                    "conditions": [{
+                            "fragment": {
+                                "attribute": {
+                                    "key": "sip",
+                                    "value": {
+                                        "str_value": "192.168.40.101"
+                                    }
+                                },
+                                "fop": 0
+                            }
+                        }, {
+                            "fragment": {
+                                "attribute": {
+                                    "key": "sport",
+                                    "value": {
+                                        "str_value": "22"
+                                    }
+                                },
+                                "fop": 0
+                            }
+                        }, {
+                            "fragment": {
+                                "attribute": {
+                                    "key": "protocol",
+                                    "value": {
+                                        "str_value": "TCP"
+                                    }
+                                },
+                                "fop": 0
+                            }
+                        },
+                        {
+                            "fragment": {
+                                "attribute": {
+                                    "key": "dip",
+                                    "value": {
+                                        "str_value": "10.10.1.1"
+                                    }
+                                },
+                                "fop": 0
+                            }
+                        }, {
+                            "fragment": {
+                                "attribute": {
+                                    "key": "dport",
+                                    "value": {
+                                        "str_value": "443"
+                                    }
+                                },
+                                "fop": 0
+                            }
+                        }
+                    ],
+                    "consequent": {
+                        "attributes": [{
+                            "key": "ACTION - ABCDE",
+                            "value": {
+                                "str_value": "ALLOW"
+                            }
+                        }]
+                    }
+                }]
+            }
+        }
+    }
+}

@@ -1367,7 +1367,8 @@ func (c *DaemonConfig) AlwaysAllowLocalhost() bool {
 // TracingEnabled returns if tracing policy (outlining which rules apply to a
 // specific set of labels) is enabled.
 func (c *DaemonConfig) TracingEnabled() bool {
-	return c.Opts.IsEnabled(PolicyTracing)
+	//return c.Opts.IsEnabled(PolicyTracing)
+	return true
 }
 
 // IsFlannelMasterDeviceSet returns if the flannel master device is set.

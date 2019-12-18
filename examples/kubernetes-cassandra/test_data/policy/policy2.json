@@ -1,0 +1,62 @@
+{
+    "polMeta": {
+        "policyId": "policy-f5365d15-fa4d-47f0-86eb-916986894ff1",
+        "name": "Policy1078",
+        "tenant": "Tenant1",
+        "namespace": "ns1",
+        "attributes": [{
+            "key": "attr1",
+            "value": {
+                "int_value": 10
+            }
+        }, {
+            "key": "attr2",
+            "value": {
+                "str_value": "value2"
+            }
+        }, {
+            "key": "data_resolver_url",
+            "value": {
+                "str_value": "http://json-server/data/2"
+            }
+        }]
+    },
+    "policyDoc": {
+        "policyType": 0,
+        "policyDocContent": {
+            "attributeBasedPolicyDoc": {
+                "rules": [{
+                    "conditions": [{
+                        "fragment": {
+                            "attribute": {
+                                "key": "sip",
+                                "value": {
+                                    "str_value": "192.168.40.101"
+                                }
+                            },
+                            "fop": 0
+                        }
+                    }, {
+                        "fragment": {
+                            "attribute": {
+                                "key": "sport",
+                                "value": {
+                                    "str_value": "22"
+                                }
+                            },
+                            "fop": 0
+                        }
+                    }],
+                    "consequent": {
+                        "attributes": [{
+                            "key": "ACTION - AB",
+                            "value": {
+                                "str_value": "Allow"
+                            }
+                        }]
+                    }
+                }]
+            }
+        }
+    }
+}

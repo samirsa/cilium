@@ -207,7 +207,7 @@ func (c *Controller) runController() {
 
 			c.mutex.Lock()
 			c.lastDuration = duration
-			c.getLogger().Debug("Controller func execution time: ", c.lastDuration)
+			//c.getLogger().Debug("Controller func execution time: ", c.lastDuration)
 
 			if err != nil {
 				switch err := err.(type) {

@@ -174,7 +174,7 @@ func (s *symbols) extractFrom(e *elf.File) error {
 			// Offset from start of binary to variable inside .data
 			offset := section.Offset + sym.Value
 			dataOffsets[sym.Name] = newVariable(sym.Name, offset)
-			log.WithField(fieldSymbol, sym.Name).Debugf("Found variable with offset %d", offset)
+			//log.WithField(fieldSymbol, sym.Name).Debugf("Found variable with offset %d", offset)
 		case section.Name == mapSection:
 			// From the Golang Documentation:
 			//   "For compatibility with Go 1.0, Symbols omits the
@@ -188,9 +188,9 @@ func (s *symbols) extractFrom(e *elf.File) error {
 			// Offset from start of binary to name inside .strtab
 			symOffset := strtab.Offset + symOffsetInStrtab
 			stringOffsets[sym.Name] = newString(sym.Name, symOffset)
-			log.WithField(fieldSymbol, sym.Name).Debugf("Found symbol with offset %d", symOffset)
+			//log.WithField(fieldSymbol, sym.Name).Debugf("Found symbol with offset %d", symOffset)
 		default:
-			log.WithField(fieldSymbol, sym.Name).Debugf("Found symbol with unknown section reference %d", sym.Section)
+			//log.WithField(fieldSymbol, sym.Name).Debugf("Found symbol with unknown section reference %d", sym.Section)
 		}
 	}
 

@@ -106,7 +106,7 @@ func (ch *CiliumHealth) runServer() {
 		if err == nil {
 			break
 		}
-		scopedLog.WithError(err).Debugf("Cannot find socket")
+		//scopedLog.WithError(err).Debugf("Cannot find socket")
 		time.Sleep(1 * time.Second)
 	}
 	if err := api.SetDefaultPermissions(defaults.SockPath); err != nil {
